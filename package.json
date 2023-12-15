@@ -1,0 +1,31 @@
+{
+  "name": "robots-text-parser",
+  "version": "0.3.0",
+  "main": "dist/index.js",
+  "repository": "git@github.com:ysugimoto/robots-text-parser",
+  "author": "ysugimoto <sugimoto@wnotes.net>",
+  "license": "MIT",
+  "devDependencies": {
+    "@biomejs/biome": "1.4.1",
+    "@types/node": "^20.10.4",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
+    "typescript": "^5.3.3",
+    "vitest": "^1.0.4"
+  },
+  "scripts": {
+    "test": "vitest",
+    "build": "tsc",
+    "prepare": "husky install"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged; test"
+    }
+  },
+  "lint-staged": {
+    "*.ts": [
+      "biome format --write ./src"
+    ]
+  }
+}
