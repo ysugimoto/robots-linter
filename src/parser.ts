@@ -27,14 +27,15 @@ export function parse(robots: string): Array<RobotRule> {
   const result: Array<RobotRule> = [];
 
   let token: Token;
+  let group: RobotRule;
+  let exists: RobotRule | undefined;
+
   while (true) {
     token = tokens.nextToken();
     switch (token.tokenType) {
       case USERAGENT:
-        const group = parseGroup(tokens);
-        const exists = result.find(
-          ({ userAgent }) => userAgent === group.userAgent,
-        );
+        group = parseGroup(tokens);
+        exists = result.find(({ userAgent }) => userAgent === group.userAgent);
         if (exists) {
           exists.rules.push(...group.rules);
         } else {

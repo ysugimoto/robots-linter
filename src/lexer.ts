@@ -16,14 +16,15 @@ export function lexer(input: string): Lexer {
 
 export class Lexer {
   private input: Buffer;
-  private pointer: number = -1;
   private stack: Array<string> = [];
   private buffer: Array<number>;
-  private current: number = 0;
-  private isEOF: boolean = false;
-  private line: number = 1;
-  private index: number = 0;
   private peeks: Array<Token> = [];
+
+  private isEOF = false;
+  private current = 0;
+  private pointer = -1;
+  private line = 1;
+  private index = 0;
 
   constructor(input: Buffer) {
     this.input = input;
@@ -73,7 +74,11 @@ export class Lexer {
     }
 
     if (this.peeks.length > 0) {
-      return this.peeks.shift()!;
+      const peek = this.peeks.shift();
+      if (!peek) {
+        throw new Error("Undefined peek");
+      }
+      return peek;
     }
 
     this.skipWhitespace();
@@ -92,8 +97,12 @@ export class Lexer {
         t = new Token(SEPARATOR, ":", line, index);
         break;
       case 0x23: // "#" - comments
-        const literal = this.readEOL();
-        t = new Token(COMMENT, String.fromCodePoint(...literal), line, index);
+        t = new Token(
+          COMMENT,
+          String.fromCodePoint(...this.readEOL()),
+          line,
+          index,
+        );
         break;
       default:
         if (this.isCharacter(this.current)) {
@@ -113,10 +122,9 @@ export class Lexer {
               break;
             default: // default as product-token or path-pattern
               this.read();
-              const value = this.readEOL();
               t = new Token(
                 IDENT,
-                ident + String.fromCodePoint(...value),
+                ident + String.fromCodePoint(...this.readEOL()),
                 line,
                 index,
               );
