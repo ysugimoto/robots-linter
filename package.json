@@ -1,8 +1,8 @@
 {
-  "name": "robots-text-parser",
+  "name": "robots-txt-parser",
   "version": "0.3.0",
   "main": "dist/index.js",
-  "repository": "git@github.com:ysugimoto/robots-text-parser",
+  "repository": "git@github.com:ysugimoto/robots-txt-parser",
   "author": "ysugimoto <sugimoto@wnotes.net>",
   "license": "MIT",
   "devDependencies": {
