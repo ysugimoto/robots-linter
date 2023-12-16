@@ -41,4 +41,13 @@ disallow: ${t.from}
       expect(matcher(robotText, "GoogleBot", t.to)).toBe(false);
     }
   });
+
+  it("CLI test caser", () => {
+    const robotText = `
+User-Agent: *
+allow: /
+disallow: /foo
+`;
+    expect(matcher(robotText, "GoogleBot", "/foo/bar")).toBe(false);
+  });
 });

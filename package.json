@@ -2,6 +2,9 @@
   "name": "robots-txt-parser",
   "version": "0.3.0",
   "main": "dist/index.js",
+  "bin": {
+    "robots-txt-parser": "./dist/cli.js"
+  },
   "repository": "git@github.com:ysugimoto/robots-txt-parser",
   "author": "ysugimoto <sugimoto@wnotes.net>",
   "license": "MIT",
@@ -28,5 +31,8 @@
     "*.ts": [
       "biome format --write ./src"
     ]
+  },
+  "dependencies": {
+    "commander": "^11.1.0"
   }
 }
