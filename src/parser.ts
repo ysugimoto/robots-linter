@@ -10,7 +10,7 @@ import {
   SEPARATOR,
   EOF,
 } from "./token";
-import { UnexpectedToken } from "./exceptions";
+import { InvalidProductToken, UnexpectedToken } from "./exceptions";
 
 // Rule represents allow or disallow rule line
 export type Rule = {
@@ -24,8 +24,8 @@ export type RobotRule = {
   rules: Array<Rule>;
 };
 
-// expose functional parser, returns array of group rulesets
-export function parse(robots: string): Array<RobotRule> {
+// expose parser function, returns array of group rulesets
+export function parse(robots: string | Buffer): Array<RobotRule> {
   const l = lexer(robots);
   const result: Array<RobotRule> = [];
 
@@ -58,6 +58,11 @@ function parseGroup(l: Lexer): RobotRule {
   };
   let token: Token = nextTokenIs(l, SEPARATOR);
   token = nextTokenIs(l, IDENT);
+  // Product token must be contracted with [a-zA-Z_-]+ characters
+  // see https://datatracker.ietf.org/doc/html/rfc9309#name-the-user-agent-line
+  if (token.literal !== "*" && !/^[a-zA-Z_-]+$/.test(token.literal)) {
+    throw new InvalidProductToken(token);
+  }
   rule.userAgent = token.literal;
 
   while (true) {
@@ -100,7 +105,7 @@ function parseRule(l: Lexer): string {
     token = l.nextToken();
     // Skip trailing comments
     if (token.tokenType !== COMMENT) {
-      patterns.push(token.literal);
+      patterns.push(decodePath(token.literal));
     }
   }
   return patterns.join("");
@@ -113,4 +118,18 @@ function nextTokenIs(l: Lexer, expect: TokenType): Token {
     throw new UnexpectedToken(token, expect);
   }
   return token;
+}
+
+// Decode defined paths
+// https://datatracker.ietf.org/doc/html/rfc9309#section-2.2.2
+export function decodePath(literal: string): string {
+  return decodeURIComponent(
+    literal.replace(/[uU]\+([a-zA-Z0-9]{6})/g, (_, m) => {
+      return [
+        `%${m.slice(0, 2)}`,
+        `%${m.slice(2, 4)}`,
+        `%${m.slice(4, 6)}`,
+      ].join("");
+    }),
+  );
 }

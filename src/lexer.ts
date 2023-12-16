@@ -11,10 +11,12 @@ import {
 import { UnexpectedCharacter } from "./exceptions";
 
 // lexer() is functional syntax that creates lexer instance.
-// The first argument accepts string or Buffer instance,
-// but always treat as Buffer inside Lexer process.
-export function lexer(input: string | Buffer): Lexer {
-  return new Lexer(typeof input === "string" ? Buffer.from(input) : input);
+// The first argument accepts string or Uint8Array,
+// and always treat as Uint8Array inside in order to support browser runtime.
+export function lexer(input: string | Uint8Array): Lexer {
+  return new Lexer(
+    typeof input === "string" ? new TextEncoder().encode(input) : input,
+  );
 }
 
 // Lexer class represents lex states in the private field.
@@ -22,7 +24,7 @@ export function lexer(input: string | Buffer): Lexer {
 export class Lexer {
   // input represents input buffer.
   // In lexing, we always treat characters as UTF-8 codepoint
-  private input: Buffer;
+  private input: Uint8Array;
   // Leading stack - indicates buffers for each lines
   private stack: Array<string> = [];
   // Current reading buffer characters
@@ -42,7 +44,7 @@ export class Lexer {
   private index = 0;
 
   // Constructor: initialize states
-  constructor(input: Buffer) {
+  constructor(input: Uint8Array) {
     this.input = input;
     this.buffer = [];
 

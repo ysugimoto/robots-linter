@@ -22,3 +22,16 @@ export class UnexpectedToken extends Error {
     );
   }
 }
+
+// InvalidProductToken represents RFC product-token error
+// see: https://datatracker.ietf.org/doc/html/rfc9309#name-the-user-agent-line
+export class InvalidProductToken extends Error {
+  constructor(t: Token) {
+    super(
+      [
+        "Product token MUST only contrains a-zA-Z_- characters",
+        ` at line ${t.line}, position ${t.index}`,
+      ].join(""),
+    );
+  }
+}

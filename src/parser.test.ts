@@ -1,13 +1,12 @@
-import { UnexpectedToken } from "./exceptions";
-import { parse } from "./parser";
+import { UnexpectedToken, InvalidProductToken } from "./exceptions";
+import { parse, decodePath } from "./parser";
 
 describe("Parser Test", () => {
   describe("Group", () => {
     it("Single Group", () => {
       const robots = `
 User-Agent: *
-Allow: /foo
-Disallow: /bar
+Allow: /foo Disallow: /bar
 Allow: /foo/bar/baz$
 Allow: /foo/bar # comment
 `;
@@ -110,6 +109,24 @@ User-Agent: *
 Disllow /foo
 `;
       expect(() => parse(robots)).toThrowError(UnexpectedToken);
+    });
+
+    it("User-Agent line must only contains specific characters", () => {
+      // https://datatracker.ietf.org/doc/html/rfc9309#name-the-user-agent-line
+      const robots = `
+User-Agent: GoogleBot+
+Disllow /foo
+`;
+      expect(() => parse(robots)).toThrowError(InvalidProductToken);
+    });
+  });
+
+  describe("Decode encoded path", () => {
+    it("unicode point", () => {
+      expect(decodePath("/foo/bar/U+E38384")).toBe("/foo/bar/ツ");
+    });
+    it("URI encoded", () => {
+      expect(decodePath("/foo/bar/%62%61%7A")).toBe("/foo/bar/baz");
     });
   });
 });
