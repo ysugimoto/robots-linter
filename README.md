@@ -1,10 +1,10 @@
-# robots-txt-parser
+# robotstxt
 
-`robots-txt-parser` implements parser and matcher `robots.txt` which is specified at [RFC 9309](https://datatracker.ietf.org/doc/html/rfc9309).
+`robotstxt` implements parser and matcher `robots.txt` which is specified at [RFC 9309](https://datatracker.ietf.org/doc/html/rfc9309).
 
 ## Motivation
 
-We could find some kind of robots.txt matcher, but could not find syntax checker so we implemented it.
+We could find some kind of robots.txt matcher, but could not find syntax checker so we implemented it with AST-based approach.
 This is useful for syntax checking on writing robots.txt usually.
 
 ## Install and Usage
@@ -12,15 +12,15 @@ This is useful for syntax checking on writing robots.txt usually.
 Install command from npm registry:
 
 ```shell
-npm install -g robots-txt-parser
-yarn add --global robots-txt-parser
-pnpm install -g robots-txt-parser
+npm install -g robotstxt
+yarn add --global robotstxt
+pnpm install -g robotstxt
 ```
 
-And you can use `robots-txt-parser` cli command to execute, see help output:
+And you can use `robotstxt` cli command to execute, see help output:
 
 ```
-Usage: robots-txt-parser [options] [command]
+Usage: robotstxt [options] [command]
 
 lint and match robots.txt
 
@@ -39,7 +39,7 @@ Commands:
 This package also can use programmable:
 
 ```ts
-import { parse, matcher } from "robots-txt-parser";
+import { parse, matcher } from "robotstxt";
 import fs from "node:fs";
 
 const buffer = fs.readFileSync("/path/to/robots.txt");

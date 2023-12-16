@@ -1,11 +1,11 @@
 {
-  "name": "robots-txt-parser",
+  "name": "robotstxt",
   "version": "0.4.0",
   "main": "dist/index.js",
   "bin": {
-    "robots-txt-parser": "./dist/cli.js"
+    "robotstxt": "./dist/cli.js"
   },
-  "repository": "git@github.com:ysugimoto/robots-txt-parser",
+  "repository": "git@github.com:ysugimoto/robotstxt",
   "author": "ysugimoto <sugimoto@wnotes.net>",
   "license": "MIT",
   "devDependencies": {

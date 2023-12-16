@@ -4,11 +4,12 @@ import { parse } from "./parser";
 import fs from "node:fs";
 
 const program = new Command();
+const pkg = JSON.parse(fs.readFileSync("../package.json", "utf8"));
 
 program
-  .name("robots-txt-parser")
+  .name(pkg.name)
   .description("lint and match robots.txt")
-  .version(JSON.parse(fs.readFileSync("../package.json", "utf8")).version);
+  .version(pkg.version);
 
 program
   .command("lint")
