@@ -1,6 +1,6 @@
-# robotstxt
+# robots-linter
 
-`robotstxt` implements parser and matcher `robots.txt` which is specified at [RFC 9309](https://datatracker.ietf.org/doc/html/rfc9309).
+`robots-linter` implements parser and matcher `robots.txt` which is specified at [RFC 9309](https://datatracker.ietf.org/doc/html/rfc9309).
 
 ## Motivation
 
@@ -12,15 +12,15 @@ This is useful for syntax checking on writing robots.txt usually.
 Install command from npm registry:
 
 ```shell
-npm install -g robotstxt
-yarn add --global robotstxt
-pnpm install -g robotstxt
+npm install -g robots-linter
+yarn add --global robots-linter
+pnpm install -g robots-linter
 ```
 
-And you can use `robotstxt` cli command to execute, see help output:
+And you can use `robots-linter` cli command to execute, see help output:
 
 ```
-Usage: robotstxt [options] [command]
+Usage: robots-linter [options] [command]
 
 lint and match robots.txt
 
@@ -39,7 +39,7 @@ Commands:
 This package also can use programmable:
 
 ```ts
-import { parse, matcher } from "robotstxt";
+import { parse, matcher } from "robots-linter";
 import fs from "node:fs";
 
 const buffer = fs.readFileSync("/path/to/robots.txt");

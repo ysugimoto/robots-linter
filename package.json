@@ -1,11 +1,11 @@
 {
-  "name": "robotstxt",
+  "name": "robots-linter",
   "version": "0.5.0",
   "main": "dist/index.js",
   "bin": {
     "robotstxt": "./dist/cli.js"
   },
-  "repository": "git@github.com:ysugimoto/robotstxt",
+  "repository": "git@github.com:ysugimoto/robots-linter",
   "author": "ysugimoto <sugimoto@wnotes.net>",
   "license": "MIT",
   "devDependencies": {
