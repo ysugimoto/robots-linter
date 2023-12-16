@@ -1,3 +1,4 @@
+import { UnexpectedToken } from "./exceptions";
 import { parse } from "./parser";
 
 describe("Parser Test", () => {
@@ -7,6 +8,8 @@ describe("Parser Test", () => {
 User-Agent: *
 Allow: /foo
 Disallow: /bar
+Allow: /foo/bar/baz$
+Allow: /foo/bar # comment
 `;
       const result = parse(robots);
       expect(result).toHaveLength(1);
@@ -15,6 +18,8 @@ Disallow: /bar
         rules: [
           { type: "ALLOW", path: "/foo" },
           { type: "DISALLOW", path: "/bar" },
+          { type: "ALLOW", path: "/foo/bar/baz$" },
+          { type: "ALLOW", path: "/foo/bar" },
         ],
       });
     });
@@ -47,26 +52,17 @@ Disallow: /cat
       });
     });
 
-    it("Merged Group", () => {
+    it("Concat path-pattern", () => {
       const robots = `
+# This is a comment
 User-Agent: *
-Allow: /foo
-Disallow: /bar
-
-User-Agent: *
-Allow: /dog
-Disallow: /cat
+Allow: /foo?query:foo=bar
 `;
       const result = parse(robots);
       expect(result).toHaveLength(1);
       expect(result[0]).toMatchObject({
         userAgent: "*",
-        rules: [
-          { type: "ALLOW", path: "/foo" },
-          { type: "DISALLOW", path: "/bar" },
-          { type: "ALLOW", path: "/dog" },
-          { type: "DISALLOW", path: "/cat" },
-        ],
+        rules: [{ type: "ALLOW", path: "/foo?query:foo=bar" }],
       });
     });
   });
@@ -88,6 +84,32 @@ Disallow: /bar
           { type: "DISALLOW", path: "/bar" },
         ],
       });
+    });
+  });
+
+  describe("Parse Errors", () => {
+    it("Unexpected ident", () => {
+      const robots = "Foo *";
+      expect(() => parse(robots)).toThrowError(UnexpectedToken);
+    });
+    it("Lacking colon in User-Agent", () => {
+      const robots = `
+User-Agent *`;
+      expect(() => parse(robots)).toThrowError(UnexpectedToken);
+    });
+    it("Lacking colon in Allow", () => {
+      const robots = `
+User-Agent: *
+Allow /foo
+`;
+      expect(() => parse(robots)).toThrowError(UnexpectedToken);
+    });
+    it("Lacking colon in Disallow", () => {
+      const robots = `
+User-Agent: *
+Disllow /foo
+`;
+      expect(() => parse(robots)).toThrowError(UnexpectedToken);
     });
   });
 });

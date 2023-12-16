@@ -1,3 +1,4 @@
+// Constant strings represent specific identifiers
 export const USERAGENT = "USERAGENT";
 export const COMMENT = "COMMENT";
 export const SEPARATOR = "SEPARATOR";
@@ -6,6 +7,8 @@ export const DISALLOW = "DISALLOW";
 export const IDENT = "IDENT"; // includes path-pattern, product-token
 export const EOF = "EOF";
 
+// Define token types which is defined in RFC9039
+// see: https://datatracker.ietf.org/doc/html/rfc9309
 export type TokenType =
   | "USERAGENT"
   | "COMMENT"
@@ -15,6 +18,7 @@ export type TokenType =
   | "IDENT"
   | "EOF";
 
+// Token class represents Token information
 export class Token {
   public tokenType: TokenType;
   public literal: string;

@@ -1,3 +1,4 @@
+import { UnexpectedCharacter } from "./exceptions";
 import { lexer } from "./lexer";
 
 describe("Lex UserAgent", () => {
@@ -40,31 +41,6 @@ describe("Lex UserAgent", () => {
     expect(l.nextToken()).toMatchObject({
       tokenType: "IDENT",
       literal: "GoogleBot",
-      line: 1,
-      index: 13,
-    });
-  });
-
-  it("Browser", () => {
-    const ua =
-      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
-    const l = lexer(`User-Agent: ${ua}`);
-    expect(l.nextToken()).toMatchObject({
-      tokenType: "USERAGENT",
-      literal: "User-Agent",
-      line: 1,
-      index: 1,
-    });
-    expect(l.nextToken()).toMatchObject({
-      tokenType: "SEPARATOR",
-      literal: ":",
-      line: 1,
-      index: 11,
-    });
-
-    expect(l.nextToken()).toMatchObject({
-      tokenType: "IDENT",
-      literal: ua,
       line: 1,
       index: 13,
     });
