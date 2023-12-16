@@ -5,6 +5,9 @@ import {
   ALLOW,
   DISALLOW,
   IDENT,
+  DIGIT,
+  CLAWLDELAY,
+  SITEMAP,
   EOF,
   Token,
 } from "./token";
@@ -135,7 +138,14 @@ export class Lexer {
         );
         break;
       default:
-        if (this.isCharacter(this.current)) {
+        if (this.isDigit(this.current)) {
+          t = new Token(
+            DIGIT,
+            String.fromCodePoint(...this.readDigit()),
+            line,
+            index,
+          );
+        } else if (this.isCharacter(this.current)) {
           const literal = this.readIdentifier();
           const ident = String.fromCodePoint(...literal);
 
@@ -149,6 +159,12 @@ export class Lexer {
               break;
             case "disallow": // Disallow rule
               t = new Token(DISALLOW, ident, line, index);
+              break;
+            case "clawl-delay":
+              t = new Token(CLAWLDELAY, ident, line, index);
+              break;
+            case "sitemap":
+              t = new Token(SITEMAP, ident, line, index);
               break;
             default: // default as product-token or path-pattern
               t = new Token(IDENT, ident, line, index);
@@ -190,11 +206,28 @@ export class Lexer {
     return code >= 0x21 && code <= 0x7e && code !== 0x3a && code !== 0x23;
   }
 
+  // Check current code point incicated digit code.
+  private isDigit(code: number) {
+    return code >= 0x30 && code <= 0x39;
+  }
+
   // Read identifiler characters
   private readIdentifier(): Array<number> {
     const codes: Array<number> = [this.current];
     while (true) {
       if (!this.isCharacter(this.peek())) {
+        return codes;
+      }
+      this.read();
+      codes.push(this.current);
+    }
+  }
+
+  // Read decimal characters
+  private readDigit(): Array<number> {
+    const codes: Array<number> = [this.current];
+    while (true) {
+      if (!this.isDigit(this.peek())) {
         return codes;
       }
       this.read();

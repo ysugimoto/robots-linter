@@ -4,6 +4,9 @@ export const COMMENT = "COMMENT";
 export const SEPARATOR = "SEPARATOR";
 export const ALLOW = "ALLOW";
 export const DISALLOW = "DISALLOW";
+export const SITEMAP = "SITEMAP";
+export const CLAWLDELAY = "CLAWLDELAY";
+export const DIGIT = "DIGIT";
 export const IDENT = "IDENT"; // includes path-pattern, product-token
 export const EOF = "EOF";
 
@@ -16,6 +19,9 @@ export type TokenType =
   | "ALLOW"
   | "DISALLOW"
   | "IDENT"
+  | "SITEMAP"
+  | "CLAWLDELAY"
+  | "DIGIT"
   | "EOF";
 
 // Token class represents Token information

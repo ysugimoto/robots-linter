@@ -64,6 +64,22 @@ Allow: /foo?query:foo=bar
         rules: [{ type: "ALLOW", path: "/foo?query:foo=bar" }],
       });
     });
+
+    it("Ignore fields", () => {
+      const robots = `
+User-Agent: *
+Allow: /
+Clawl-Delay: 10
+
+Sitemap: https://example.com/sitemap.xml
+`;
+      const result = parse(robots);
+      expect(result).toHaveLength(1);
+      expect(result[0]).toMatchObject({
+        userAgent: "*",
+        rules: [{ type: "ALLOW", path: "/" }],
+      });
+    });
   });
 
   describe("Comment", () => {

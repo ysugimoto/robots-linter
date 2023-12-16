@@ -8,6 +8,9 @@ import {
   DISALLOW,
   IDENT,
   SEPARATOR,
+  SITEMAP,
+  DIGIT,
+  CLAWLDELAY,
   EOF,
 } from "./token";
 import { InvalidProductToken, UnexpectedToken } from "./exceptions";
@@ -37,6 +40,10 @@ export function parse(robots: string | Buffer): Array<RobotRule> {
       case USERAGENT:
         result.push(parseGroup(l));
         break;
+      case SITEMAP:
+        // These line is enable but ignored by GoogleBot
+        skipLine(l);
+        break;
       case COMMENT:
         // Skip comment token
         break;
@@ -46,6 +53,26 @@ export function parse(robots: string | Buffer): Array<RobotRule> {
       default:
         throw new UnexpectedToken(token);
     }
+  }
+}
+
+// Skip sitemap line group
+function skipLine(l: Lexer) {
+  let token = nextTokenIs(l, SEPARATOR);
+  while (true) {
+    token = l.peekToken();
+    if (token.tokenType === EOF) {
+      return;
+    }
+    if (
+      token.tokenType !== IDENT &&
+      token.tokenType !== SEPARATOR &&
+      token.tokenType !== COMMENT &&
+      token.tokenType !== DIGIT
+    ) {
+      return;
+    }
+    l.nextToken();
   }
 }
 
@@ -67,13 +94,22 @@ function parseGroup(l: Lexer): RobotRule {
 
   while (true) {
     token = l.peekToken();
-    if (token.tokenType === EOF || token.tokenType === USERAGENT) {
+    if (
+      token.tokenType === EOF ||
+      token.tokenType === USERAGENT ||
+      token.tokenType === SITEMAP
+    ) {
       break;
     }
     token = l.nextToken();
     switch (token.tokenType) {
       case COMMENT:
         // Skip comment
+        break;
+      case CLAWLDELAY:
+        // These line is enable but ignored by GoogleBot
+        nextTokenIs(l, SEPARATOR);
+        nextTokenIs(l, DIGIT);
         break;
       case ALLOW:
         rule.rules.push({ type: "ALLOW", path: parseRule(l) });
