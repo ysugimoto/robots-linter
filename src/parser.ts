@@ -28,7 +28,7 @@ export type RobotRule = {
 };
 
 // expose parser function, returns array of group rulesets
-export function parse(robots: string | Buffer): Array<RobotRule> {
+export function parse(robots: string | Uint8Array): Array<RobotRule> {
   const l = lexer(robots);
   const result: Array<RobotRule> = [];
 

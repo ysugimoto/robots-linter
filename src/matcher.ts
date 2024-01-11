@@ -2,7 +2,7 @@ import { decodePath, parse, RobotRule, Rule } from "./parser";
 
 // Expose matcher function that parse robots.txt and comparing userAgent and path.
 export function matcher(
-  robotsTxt: string | Buffer,
+  robotsTxt: string | Uint8Array,
   userAgent: string,
   path: string,
 ): boolean {
