@@ -1,3 +1,4 @@
+import { describe, it, expect } from "vitest";
 import { UnexpectedToken, InvalidProductToken } from "./exceptions";
 import { parse, decodePath } from "./parser";
 
@@ -20,6 +21,19 @@ Allow: /foo/bar # comment
           { type: "ALLOW", path: "/foo/bar/baz$" },
           { type: "ALLOW", path: "/foo/bar" },
         ],
+      });
+    });
+
+    it("Enable to parse even numeric product token contains", () => {
+      const robots = `
+User-Agent: MJ12bot
+DisAllow: /
+`;
+      const result = parse(robots);
+      expect(result).toHaveLength(1);
+      expect(result[0]).toMatchObject({
+        userAgent: "MJ12bot",
+        rules: [{ type: "DISALLOW", path: "/" }],
       });
     });
 

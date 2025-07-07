@@ -87,7 +87,8 @@ function parseGroup(l: Lexer): RobotRule {
   token = nextTokenIs(l, IDENT);
   // Product token must be contracted with [a-zA-Z_-]+ characters
   // see https://datatracker.ietf.org/doc/html/rfc9309#name-the-user-agent-line
-  if (token.literal !== "*" && !/^[a-zA-Z_-]+$/.test(token.literal)) {
+  // But... some rude bots (e.g MJ12bot, etc...) has numeric characters so we should pass even containing numeric characters
+  if (token.literal !== "*" && !/^[0-9a-zA-Z_-]+$/.test(token.literal)) {
     throw new InvalidProductToken(token);
   }
   rule.userAgent = token.literal;
