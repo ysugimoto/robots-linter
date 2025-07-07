@@ -29,7 +29,7 @@ export class InvalidProductToken extends Error {
   constructor(t: Token) {
     super(
       [
-        "Product token MUST only contrains a-zA-Z_- characters",
+        "Product token MUST only contains a-zA-Z_- characters",
         ` at line ${t.line}, position ${t.index}`,
       ].join(""),
     );
