@@ -1,17 +1,21 @@
 runs:
   using: "composite"
   steps:
-    - uses: actions/setup-node@v3
+    - uses: actions/setup-node@v4
       with:
         node-version-file: ".node-version"
         registry-url: "https://registry.npmjs.org"
+    - uses: pnpm/action-setup@v4
+      with:
+        run_install: false
     - name: install dependencies
       shell: bash
-      run: npm install
+      run: pnpm install
     - name: test and lint program
       shell: bash
       run: |
-        npm run lint
+        pnpm lint
+        pnpm test
     - name: build app
       shell: bash
-      run: npm run build
+      run: pnpm build
